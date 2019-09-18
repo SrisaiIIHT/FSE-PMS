@@ -1,0 +1,28 @@
+
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Task Search</h4>
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>ProjectDesc</th>
+          <th>Id</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let taskInfo of taskInfos | async; let idx = index">
+          <td><input type="radio" name="radiogroup" 
+                value="taskInfo.id"
+                (change)="onSelectionChange(taskInfo)" [checked]="idx === 0"></td>
+          <td>{{taskInfo.Task}}</td>
+          <td>{{taskInfo.id}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button (click)="passBack();" type="submit" class="btn btn-primary w-100">Select</button>
+  </div>

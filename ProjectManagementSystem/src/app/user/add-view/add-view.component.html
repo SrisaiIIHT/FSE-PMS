@@ -1,0 +1,70 @@
+<div class="container">
+<div class="card">
+  <div class="card-body">
+    <form #userForm="ngForm" (ngSubmit)="saveUser()">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Add User</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group col-md-4">
+            <label for="EmployeeId">Employee Id</label>
+            <input id="EmployeeId" name="EmployeeId" [(ngModel)]="user.EmployeeId" type="text" class="form-control" />
+          </div>
+          <div class="form-group  col-md-4">
+            <label for="FirstName">First Name</label>
+            <input id="FirstName" name="FirstName" [(ngModel)]="user.FirstName" type="text" class="form-control" />
+          </div>
+          <div class="form-group col-md-4">
+            <label for="LastName">Last Name</label>
+            <input id="LastName" name="LastName" [(ngModel)]="user.LastName" type="text" class="form-control" />
+          </div>
+          <div class="form-group col-md-6 ">
+            <input class="col-md-3" type="button" value="Add User" (click)="OnClickAddUser()" />
+            <input class="col-md-3 ml-3" type="button" value="Reset" (click)="OnClickReset()" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+  <form class="form-inline">
+    <div class="form-group col-md-6">
+      <label for="Search">User</label>
+      <input type="text" class="ml-3" id="SearchBy" name="SearchBy" placeholder="Search...">
+      <input type="button" class="ml-3" value="Search" (click)="OnSearchClick()">
+    </div>
+    <div class="form-group col-md-10">
+      <label for="SortBy">Sort By :</label>
+      <input type="button" class="ml-1" value="First Name" (click)="OnFirstNameSortClick()">
+      <input type="button" class="ml-3" value="Last Name" (click)="OnLastNameSortClick()">
+      <input type="button" class="ml-3" value="Employee Id" (click)="OnEmployeeIdSortClick()">
+    </div>
+  </form>
+
+  <hr/>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>EmployeeId</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of allUsers | async">
+        <td>{{user.FirstName}}</td>
+        <td>{{user.LastName}}</td>
+        <td>{{user.EmployeeId}}</td>
+        <td>
+          <button class="btn btn-primary" (click)="loadUserToEdit(user.Id)">Edit</button>
+        </td>
+        <td>
+          <button class="btn " (click)="deleteUser(user.Id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

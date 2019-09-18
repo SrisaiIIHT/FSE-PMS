@@ -1,0 +1,30 @@
+
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Manager Search</h4>
+  <button type="button" class="close" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>EmployeeId</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of allUsers | async; let idx = index">
+        <td><input type="radio" name="radiogroup" 
+              value="user.EmployeeId"
+              (change)="onSelectionChange(user)" [checked]="idx === 0"></td>
+        <td>{{user.FirstName}}</td>
+        <td>{{user.LastName}}</td>
+        <td>{{user.EmployeeId}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <button (click)="passBack();" type="submit" class="btn btn-primary w-100">Select</button>
+</div>

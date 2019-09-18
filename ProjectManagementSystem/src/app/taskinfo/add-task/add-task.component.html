@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <form #userForm="ngForm" (ngSubmit)="saveTask()">
+        <div class="panel panel-primary">
+          <div class="panel-body ">
+            <div class="form-group col-md-8">
+              <label for="SearchByProject">Project</label>
+              <input type="text" class="ml-3" id="SearchByProject" disabled  name="SearchByProject" [(ngModel)]="taskInfo.ProjectId"
+                  placeholder="Search..." >
+              <button class="searchBtn ml-3" (click)="openSearchProjectModal()">Search</button>
+            </div>
+            <div class="form-group col-md-8">
+              <label for="TaskDesc">Task:</label>
+              <input id="TaskDesc" name="TaskDesc" class="ml-3" [(ngModel)]="taskInfo.Task" type="text" />
+            </div>
+            <div class="form-group col-md-8">              
+            <input type="checkbox" id="SetDate" name="SetDate" [(ngModel)]="taskInfo.IsParent"> Parent Task
+              </div>  
+              <div class="col-md-8 form-group">
+                  <label for="Priority">Priority</label>
+                  <ng5-slider [(value)]="taskInfo.Priority" class="ml-3 col-md-6" [options]="options"></ng5-slider>
+                </div>
+            <div class="form-group col-md-8">
+              <label for="SearchByTask">Parent Task</label>
+              <input type="text" class="ml-3" id="SearchByTask" disabled  name="SearchByTask" [(ngModel)]="taskInfo.ParentTaskId"
+              placeholder="Search..." >
+              <button class="searchBtn ml-3" (click)="openSearchTaskModal()">Search</button>
+            </div>
+            <div class="form-group col-md-8">
+              <label for="StartDate">Start Date</label>
+              <input  type="text" id="StartDate" name="StartDate" class="ml-3" [(ngModel)]="taskInfo.StartDate" bsDatepicker>
+                
+              <label for="EndDate" class="ml-3">End Date</label>
+              <input  type="text" id="EndDate" name="EndDate" class="ml-3" [(ngModel)]="taskInfo.EndDate" bsDatepicker>
+              </div>
+            <div class="form-group col-md-8">
+                <label for="SearchByUser">User</label>
+                <input type="text" class="ml-3" id="SearchByUser" disabled name="SearchByUser" [(ngModel)]="taskInfo.User.FirstName"
+                  placeholder="Search...">
+                <button class="ml-3 searchBtn" (click)="openUserModal()">Search</button>
+              </div>
+            <div class="form-group col-md-6 ">
+                <button type="submit" class="btn btn-primary" >Save</button>
+                <button class="col-md-3 ml-3" class="btn"(click)="userForm.reset();onResetClick()">Reset</button> 
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

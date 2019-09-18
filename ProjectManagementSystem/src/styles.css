@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+.form-group{
+    margin-top: 15px;
+}
+.searchBtn{
+    border-radius: 25px 25px 25px 25px;
+    background-color: rgb(0, 162, 255)
+}
+label{
+    font-weight: bold;
+}
+.proj-info{
+    color: blue;
+}
+.row{
+    border: grey;
+}
