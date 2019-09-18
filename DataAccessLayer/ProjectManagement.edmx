@@ -1,0 +1,628 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ProjectManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="LookupProjectStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Desc" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="ProjectDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProjectDesc" Type="nvarchar" MaxLength="50" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Priority" Type="int" />
+          <Property Name="ManagerId" Type="int" />
+          <Property Name="StatusId" Type="int" />
+        </EntityType>
+        <EntityType Name="ProjectManagerInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProjectId" Type="int" />
+          <Property Name="ManagerId" Type="int" />
+        </EntityType>
+        <EntityType Name="TaskDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProjectId" Type="int" />
+          <Property Name="Task" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsParent" Type="bit" />
+          <Property Name="Priority" Type="int" />
+          <Property Name="ParentTaskId" Type="int" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="StatusId" Type="int" />
+        </EntityType>
+        <EntityType Name="TaskParent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="TaskId" Type="int" />
+          <Property Name="ParentTaskId" Type="int" />
+        </EntityType>
+        <EntityType Name="TaskUserInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="TaskId" Type="int" />
+          <Property Name="UserId" Type="int" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="10" />
+          <Property Name="EmpId" Type="int" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <Association Name="FK_ProjectDetails_LookupProjectStatus">
+          <End Role="LookupProjectStatus" Type="Self.LookupProjectStatus" Multiplicity="0..1" />
+          <End Role="ProjectDetails" Type="Self.ProjectDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupProjectStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectDetails">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDetails_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ProjectDetails" Type="Self.ProjectDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectDetails">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectManagerInfo_ProjectDetails">
+          <End Role="ProjectDetails" Type="Self.ProjectDetails" Multiplicity="0..1" />
+          <End Role="ProjectManagerInfo" Type="Self.ProjectManagerInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectManagerInfo">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectManagerInfo_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ProjectManagerInfo" Type="Self.ProjectManagerInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectManagerInfo">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_LookupProjectStatus">
+          <End Role="LookupProjectStatus" Type="Self.LookupProjectStatus" Multiplicity="0..1" />
+          <End Role="TaskDetails" Type="Self.TaskDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupProjectStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetails">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_ProjectDetails">
+          <End Role="ProjectDetails" Type="Self.ProjectDetails" Multiplicity="0..1" />
+          <End Role="TaskDetails" Type="Self.TaskDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetails">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_TaskDetails">
+          <End Role="TaskDetails" Type="Self.TaskDetails" Multiplicity="1" />
+          <End Role="TaskDetails1" Type="Self.TaskDetails" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TaskDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetails1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskParent_ParentTask">
+          <End Role="TaskDetails" Type="Self.TaskDetails" Multiplicity="0..1" />
+          <End Role="TaskParent" Type="Self.TaskParent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskParent">
+              <PropertyRef Name="ParentTaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskParent_Task">
+          <End Role="TaskDetails" Type="Self.TaskDetails" Multiplicity="0..1" />
+          <End Role="TaskParent" Type="Self.TaskParent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskParent">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskUserInfo_TaskUserInfo">
+          <End Role="TaskUserInfo" Type="Self.TaskUserInfo" Multiplicity="1" />
+          <End Role="TaskUserInfo1" Type="Self.TaskUserInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TaskUserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskUserInfo1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjectManagementModelStoreContainer">
+          <EntitySet Name="LookupProjectStatus" EntityType="Self.LookupProjectStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectDetails" EntityType="Self.ProjectDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectManagerInfo" EntityType="Self.ProjectManagerInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskDetails" EntityType="Self.TaskDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskParent" EntityType="Self.TaskParent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskUserInfo" EntityType="Self.TaskUserInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ProjectDetails_LookupProjectStatus" Association="Self.FK_ProjectDetails_LookupProjectStatus">
+            <End Role="LookupProjectStatus" EntitySet="LookupProjectStatus" />
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDetails_User" Association="Self.FK_ProjectDetails_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectManagerInfo_ProjectDetails" Association="Self.FK_ProjectManagerInfo_ProjectDetails">
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+            <End Role="ProjectManagerInfo" EntitySet="ProjectManagerInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectManagerInfo_User" Association="Self.FK_ProjectManagerInfo_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ProjectManagerInfo" EntitySet="ProjectManagerInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_LookupProjectStatus" Association="Self.FK_TaskDetails_LookupProjectStatus">
+            <End Role="LookupProjectStatus" EntitySet="LookupProjectStatus" />
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_ProjectDetails" Association="Self.FK_TaskDetails_ProjectDetails">
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_TaskDetails" Association="Self.FK_TaskDetails_TaskDetails">
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+            <End Role="TaskDetails1" EntitySet="TaskDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskParent_ParentTask" Association="Self.FK_TaskParent_ParentTask">
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+            <End Role="TaskParent" EntitySet="TaskParent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskParent_Task" Association="Self.FK_TaskParent_Task">
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+            <End Role="TaskParent" EntitySet="TaskParent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskUserInfo_TaskUserInfo" Association="Self.FK_TaskUserInfo_TaskUserInfo">
+            <End Role="TaskUserInfo" EntitySet="TaskUserInfo" />
+            <End Role="TaskUserInfo1" EntitySet="TaskUserInfo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProjectManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ProjectDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProjectDesc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="ManagerId" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ProjectDetails_User" FromRole="ProjectDetails" ToRole="User" />
+          <NavigationProperty Name="ProjectManagerInfoes" Relationship="Self.FK_ProjectManagerInfo_ProjectDetails" FromRole="ProjectDetails" ToRole="ProjectManagerInfo" />
+          <NavigationProperty Name="TaskDetails" Relationship="Self.FK_TaskDetails_ProjectDetails" FromRole="ProjectDetails" ToRole="TaskDetails" />
+          <Property Name="StatusId" Type="Int32" />
+          <NavigationProperty Name="LookupProjectStatu" Relationship="ProjectManagementModel.FK_ProjectDetails_LookupProjectStatus" FromRole="ProjectDetail" ToRole="LookupProjectStatu" />
+        </EntityType>
+        <EntityType Name="ProjectManagerInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" />
+          <Property Name="ManagerId" Type="Int32" />
+          <NavigationProperty Name="ProjectDetail" Relationship="Self.FK_ProjectManagerInfo_ProjectDetails" FromRole="ProjectManagerInfo" ToRole="ProjectDetails" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ProjectManagerInfo_User" FromRole="ProjectManagerInfo" ToRole="User" />
+        </EntityType>
+        <EntityType Name="TaskDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProjectId" Type="Int32" />
+          <Property Name="Task" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsParent" Type="Boolean" />
+          <Property Name="Priority" Type="Int32" />
+          <Property Name="ParentTaskId" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="UserId" Type="Int32" />
+          <NavigationProperty Name="ProjectDetail" Relationship="Self.FK_TaskDetails_ProjectDetails" FromRole="TaskDetails" ToRole="ProjectDetails" />
+          <NavigationProperty Name="TaskDetails1" Relationship="Self.FK_TaskDetails_TaskDetails" FromRole="TaskDetails" ToRole="TaskDetails1" />
+          <NavigationProperty Name="TaskDetail1" Relationship="Self.FK_TaskDetails_TaskDetails" FromRole="TaskDetails1" ToRole="TaskDetails" />
+          <NavigationProperty Name="User" Relationship="Self.FK_TaskDetails_User" FromRole="TaskDetails" ToRole="User" />
+          <NavigationProperty Name="TaskParents" Relationship="Self.FK_TaskParent_ParentTask" FromRole="TaskDetails" ToRole="TaskParent" />
+          <NavigationProperty Name="TaskParents1" Relationship="Self.FK_TaskParent_Task" FromRole="TaskDetails" ToRole="TaskParent" />
+          <Property Name="StatusId" Type="Int32" />
+          <NavigationProperty Name="LookupProjectStatu" Relationship="ProjectManagementModel.FK_TaskDetails_LookupProjectStatus" FromRole="TaskDetail" ToRole="LookupProjectStatu" />
+        </EntityType>
+        <EntityType Name="TaskParent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="TaskId" Type="Int32" />
+          <Property Name="ParentTaskId" Type="Int32" />
+          <NavigationProperty Name="TaskDetail" Relationship="Self.FK_TaskParent_ParentTask" FromRole="TaskParent" ToRole="TaskDetails" />
+          <NavigationProperty Name="TaskDetail1" Relationship="Self.FK_TaskParent_Task" FromRole="TaskParent" ToRole="TaskDetails" />
+        </EntityType>
+        <EntityType Name="TaskUserInfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="TaskId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <NavigationProperty Name="TaskUserInfo1" Relationship="Self.FK_TaskUserInfo_TaskUserInfo" FromRole="TaskUserInfo" ToRole="TaskUserInfo1" />
+          <NavigationProperty Name="TaskUserInfo2" Relationship="Self.FK_TaskUserInfo_TaskUserInfo" FromRole="TaskUserInfo1" ToRole="TaskUserInfo" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="EmpId" Type="Int32" />
+          <Property Name="Active" Type="Boolean" />
+          <NavigationProperty Name="ProjectDetails" Relationship="Self.FK_ProjectDetails_User" FromRole="User" ToRole="ProjectDetails" />
+          <NavigationProperty Name="ProjectManagerInfoes" Relationship="Self.FK_ProjectManagerInfo_User" FromRole="User" ToRole="ProjectManagerInfo" />
+          <NavigationProperty Name="TaskDetails" Relationship="Self.FK_TaskDetails_User" FromRole="User" ToRole="TaskDetails" />
+        </EntityType>
+        <Association Name="FK_ProjectDetails_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ProjectDetails" Type="Self.ProjectDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectDetails">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectManagerInfo_ProjectDetails">
+          <End Role="ProjectDetails" Type="Self.ProjectDetail" Multiplicity="0..1" />
+          <End Role="ProjectManagerInfo" Type="Self.ProjectManagerInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectManagerInfo">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_ProjectDetails">
+          <End Role="ProjectDetails" Type="Self.ProjectDetail" Multiplicity="0..1" />
+          <End Role="TaskDetails" Type="Self.TaskDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetails">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectManagerInfo_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ProjectManagerInfo" Type="Self.ProjectManagerInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectManagerInfo">
+              <PropertyRef Name="ManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_TaskDetails">
+          <End Role="TaskDetails" Type="Self.TaskDetail" Multiplicity="1" />
+          <End Role="TaskDetails1" Type="Self.TaskDetail" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TaskDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetails1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="TaskDetails" Type="Self.TaskDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetails">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskParent_ParentTask">
+          <End Role="TaskDetails" Type="Self.TaskDetail" Multiplicity="0..1" />
+          <End Role="TaskParent" Type="Self.TaskParent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskParent">
+              <PropertyRef Name="ParentTaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskParent_Task">
+          <End Role="TaskDetails" Type="Self.TaskDetail" Multiplicity="0..1" />
+          <End Role="TaskParent" Type="Self.TaskParent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskDetails">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskParent">
+              <PropertyRef Name="TaskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskUserInfo_TaskUserInfo">
+          <End Role="TaskUserInfo" Type="Self.TaskUserInfo" Multiplicity="1" />
+          <End Role="TaskUserInfo1" Type="Self.TaskUserInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="TaskUserInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskUserInfo1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjectManagementEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ProjectDetails" EntityType="Self.ProjectDetail" />
+          <EntitySet Name="ProjectManagerInfoes" EntityType="Self.ProjectManagerInfo" />
+          <EntitySet Name="TaskDetails" EntityType="Self.TaskDetail" />
+          <EntitySet Name="TaskParents" EntityType="Self.TaskParent" />
+          <EntitySet Name="TaskUserInfoes" EntityType="Self.TaskUserInfo" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_ProjectDetails_User" Association="Self.FK_ProjectDetails_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectManagerInfo_ProjectDetails" Association="Self.FK_ProjectManagerInfo_ProjectDetails">
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+            <End Role="ProjectManagerInfo" EntitySet="ProjectManagerInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_ProjectDetails" Association="Self.FK_TaskDetails_ProjectDetails">
+            <End Role="ProjectDetails" EntitySet="ProjectDetails" />
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectManagerInfo_User" Association="Self.FK_ProjectManagerInfo_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ProjectManagerInfo" EntitySet="ProjectManagerInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_TaskDetails" Association="Self.FK_TaskDetails_TaskDetails">
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+            <End Role="TaskDetails1" EntitySet="TaskDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_User" Association="Self.FK_TaskDetails_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskParent_ParentTask" Association="Self.FK_TaskParent_ParentTask">
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+            <End Role="TaskParent" EntitySet="TaskParents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskParent_Task" Association="Self.FK_TaskParent_Task">
+            <End Role="TaskDetails" EntitySet="TaskDetails" />
+            <End Role="TaskParent" EntitySet="TaskParents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskUserInfo_TaskUserInfo" Association="Self.FK_TaskUserInfo_TaskUserInfo">
+            <End Role="TaskUserInfo" EntitySet="TaskUserInfoes" />
+            <End Role="TaskUserInfo1" EntitySet="TaskUserInfoes" />
+          </AssociationSet>
+          <EntitySet Name="LookupProjectStatus" EntityType="ProjectManagementModel.LookupProjectStatu" />
+          <AssociationSet Name="FK_ProjectDetails_LookupProjectStatus" Association="ProjectManagementModel.FK_ProjectDetails_LookupProjectStatus">
+            <End Role="LookupProjectStatu" EntitySet="LookupProjectStatus" />
+            <End Role="ProjectDetail" EntitySet="ProjectDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TaskDetails_LookupProjectStatus" Association="ProjectManagementModel.FK_TaskDetails_LookupProjectStatus">
+            <End Role="LookupProjectStatu" EntitySet="LookupProjectStatus" />
+            <End Role="TaskDetail" EntitySet="TaskDetails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="LookupProjectStatu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Desc" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="ProjectDetails" Relationship="ProjectManagementModel.FK_ProjectDetails_LookupProjectStatus" FromRole="LookupProjectStatu" ToRole="ProjectDetail" />
+          <NavigationProperty Name="TaskDetails" Relationship="ProjectManagementModel.FK_TaskDetails_LookupProjectStatus" FromRole="LookupProjectStatu" ToRole="TaskDetail" />
+        </EntityType>
+        <Association Name="FK_ProjectDetails_LookupProjectStatus">
+          <End Type="ProjectManagementModel.LookupProjectStatu" Role="LookupProjectStatu" Multiplicity="0..1" />
+          <End Type="ProjectManagementModel.ProjectDetail" Role="ProjectDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupProjectStatu">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProjectDetail">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TaskDetails_LookupProjectStatus">
+          <End Type="ProjectManagementModel.LookupProjectStatu" Role="LookupProjectStatu" Multiplicity="0..1" />
+          <End Type="ProjectManagementModel.TaskDetail" Role="TaskDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LookupProjectStatu">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TaskDetail">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProjectManagementModelStoreContainer" CdmEntityContainer="ProjectManagementEntities">
+          <EntitySetMapping Name="ProjectDetails">
+            <EntityTypeMapping TypeName="ProjectManagementModel.ProjectDetail">
+              <MappingFragment StoreEntitySet="ProjectDetails">
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProjectDesc" ColumnName="ProjectDesc" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectManagerInfoes">
+            <EntityTypeMapping TypeName="ProjectManagementModel.ProjectManagerInfo">
+              <MappingFragment StoreEntitySet="ProjectManagerInfo">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ManagerId" ColumnName="ManagerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskDetails">
+            <EntityTypeMapping TypeName="ProjectManagementModel.TaskDetail">
+              <MappingFragment StoreEntitySet="TaskDetails">
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Task" ColumnName="Task" />
+                <ScalarProperty Name="IsParent" ColumnName="IsParent" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="ParentTaskId" ColumnName="ParentTaskId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskParents">
+            <EntityTypeMapping TypeName="ProjectManagementModel.TaskParent">
+              <MappingFragment StoreEntitySet="TaskParent">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="ParentTaskId" ColumnName="ParentTaskId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskUserInfoes">
+            <EntityTypeMapping TypeName="ProjectManagementModel.TaskUserInfo">
+              <MappingFragment StoreEntitySet="TaskUserInfo">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TaskId" ColumnName="TaskId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ProjectManagementModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="EmpId" ColumnName="EmpId" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LookupProjectStatus">
+            <EntityTypeMapping TypeName="ProjectManagementModel.LookupProjectStatu">
+              <MappingFragment StoreEntitySet="LookupProjectStatus">
+                <ScalarProperty Name="Desc" ColumnName="Desc" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
